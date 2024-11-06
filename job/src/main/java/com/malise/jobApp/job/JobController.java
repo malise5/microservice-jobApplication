@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import com.malise.jobApp.job.dto.JobWithCompanyDTO;
 import com.malise.jobApp.job.impl.JobImp;
 
 
@@ -30,9 +31,9 @@ public class JobController {
     }
 
     @GetMapping("/jobs")
-    public ResponseEntity<List<Job>> findAllJobs() {
+    public ResponseEntity<List<JobWithCompanyDTO>> findAllJobs() {
 
-        List<Job> jobs = jObServiceImp.findaAll();
+        List<JobWithCompanyDTO> jobs = jObServiceImp.findAll();
  
         return ResponseEntity.status(HttpStatus.OK).body(jobs);
 

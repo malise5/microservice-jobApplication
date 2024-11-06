@@ -1,15 +1,26 @@
 package com.malise.jobApp.job.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import javax.swing.RowFilter;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
 
 import com.malise.jobApp.job.Job;
 import com.malise.jobApp.job.JobRepository;
 import com.malise.jobApp.job.JobService;
+import com.malise.jobApp.job.dto.JobWithCompanyDTO;
+import com.malise.jobApp.job.external.Company;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class JobImp implements JobService{
 
     private final JobRepository jobRepository;
@@ -20,9 +31,65 @@ public class JobImp implements JobService{
     }
 
     @Override
-    public List<Job> findaAll() {
-        return jobRepository.findAll();
+    public List<JobWithCompanyDTO> findAll() {
+
+        List<Job> jobs = jobRepository.findAll();
+        List<JobWithCompanyDTO> jobsWithCompanyDTO = new ArrayList<>();
+
+        return jobs.stream().map(this::convertToDto).collect(Collectors.toList());
+
+        // RestTemplate restTemplate = new RestTemplate();
+        // for (Job job : jobs) {
+        //     JobWithCompanyDTO jobWithCompanyDTO = new JobWithCompanyDTO();
+        //     jobWithCompanyDTO.setJob(job);
+        //     Company company = restTemplate.getForObject("http://localhost:8081/api/companies/2" + job.getCompanyId(), Company.class);
+        //     jobWithCompanyDTO.setCompany(company);
+        //     jobsWithCompanyDTO.add(jobWithCompanyDTO);
+        // }
+        //   for (Job job : jobs) {
+        //     JobWithCompanyDTO jobWithCompanyDTO = new JobWithCompanyDTO();
+        //     jobWithCompanyDTO.setJob(job);
+
+        //     // Fetch company details
+        //     try {
+        //         String companyApiUrl = "http://localhost:8081/api/companies/" + job.getCompanyId();
+        //         Company company = restTemplate.getForObject(companyApiUrl, Company.class);
+        //         jobWithCompanyDTO.setCompany(company);
+        //     } catch (RestClientException e) {
+        //         log.error("Failed to fetch company details for Job ID {}: {}", job.getId(), e.getMessage());
+        //         jobWithCompanyDTO.setCompany(null); // Set to null or handle as needed
+        //     }
+
+        //     jobsWithCompanyDTO.add(jobWithCompanyDTO);
+        // }
+        // log.info("============================================================================");
+        // // System.out.println(company.);
+        // return jobsWithCompanyDTO;
+
+
     }
+
+    private JobWithCompanyDTO convertToDto(Job job){
+        JobWithCompanyDTO jobWithCompanyDTO = new JobWithCompanyDTO();
+        jobWithCompanyDTO.setJob(job);
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        // Fetch company details
+        try {
+            String companyApiUrl = "http://localhost:8081/api/companies/" + job.getCompanyId();
+            Company company = restTemplate.getForObject(companyApiUrl, Company.class);
+            jobWithCompanyDTO.setCompany(company);
+        } catch (RestClientException e) {
+            log.error("Failed to fetch company details for Job ID {}: {}", job.getId(), e.getMessage());
+            jobWithCompanyDTO.setCompany(null); // Set to null or handle as needed
+        }
+
+        return jobWithCompanyDTO;
+    }
+
+
+
 
     @Override
     public void createJob(Job job) {

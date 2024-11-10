@@ -15,6 +15,7 @@ import com.malise.jobApp.job.JobRepository;
 import com.malise.jobApp.job.JobService;
 import com.malise.jobApp.job.dto.JobWithCompanyDTO;
 import com.malise.jobApp.job.external.Company;
+import com.malise.jobApp.job.mapper.JobMapper;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -43,36 +44,38 @@ public class JobImp implements JobService{
     }
 
     private JobWithCompanyDTO convertToDto(Job job){
-        JobWithCompanyDTO jobWithCompanyDTO = new JobWithCompanyDTO();
-        jobWithCompanyDTO.setJob(job);
-
-        // RestTemplate restTemplate = new RestTemplate();
-
-        // Fetch company details
-        try {
+      
             String companyApiUrl = "http://COMPANY:8081/api/companies/" + job.getCompanyId();
             Company company = restTemplate.getForObject(companyApiUrl, Company.class);
+
+            JobWithCompanyDTO jobWithCompanyDTO = JobMapper.mapToJobWithCompanyDTO(job, company);
+
             jobWithCompanyDTO.setCompany(company);
-        } catch (RestClientException e) {
-            log.error("Failed to fetch company details for Job ID {}: {}", job.getId(), e.getMessage());
-            jobWithCompanyDTO.setCompany(null); // Set to null or handle as needed
-        }
 
-        return jobWithCompanyDTO;
+            return jobWithCompanyDTO;
+
     }
-
-
-
 
     @Override
     public void createJob(Job job) {
         jobRepository.save(job);
     }
 
+    // @Override
+    // public Job findJobById(Long id) {
+    //     return jobRepository.findById(id).orElse(null);
+    // }
+
     @Override
-    public Job findJobById(Long id) {
-        return jobRepository.findById(id).orElse(null);
+    public JobWithCompanyDTO findJobById(Long id) {
+        Job job= jobRepository.findById(id).orElse(null);
+        return convertToDto(job);
+
     }
+
+
+
+
 
     @Override
     public Boolean deleteJobById(Long id) {

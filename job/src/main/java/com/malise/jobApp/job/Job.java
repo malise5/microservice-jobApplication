@@ -36,8 +36,6 @@ public class Job {
     @Column(name = "location")
     private String location;
 
-    // @JsonIgnore
-    // @ManyToOne
     private Long companyId;
 
 }

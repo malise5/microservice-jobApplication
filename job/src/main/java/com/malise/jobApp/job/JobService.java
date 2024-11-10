@@ -10,7 +10,7 @@ public interface JobService {
 
     void createJob(Job job);
 
-    Job findJobById(Long id);
+    JobWithCompanyDTO findJobById(Long id);
 
     Boolean deleteJobById(Long id);
 

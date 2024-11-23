@@ -1,9 +1,12 @@
 package com.malise.jobApp.job.dto;
 
+import java.util.List;
+
 import com.malise.jobApp.job.external.Company;
+import com.malise.jobApp.job.external.Review;
 
 
-public class JobWithCompanyDTO {
+public class JobDTO {
     
     private Long id;
 
@@ -19,7 +22,8 @@ public class JobWithCompanyDTO {
 
     private Company company;
 
-    
+    private List<Review> review;
+
    
     public Company getCompany() {
         return company;
@@ -76,6 +80,15 @@ public class JobWithCompanyDTO {
     public void setLocation(String location) {
         this.location = location;
     }
+
+    public List<Review> getReview() {
+        return review;
+    }
+
+    public void setReview(List<Review> review) {
+        this.review = review;
+    }
+
 
     
     

@@ -2,15 +2,15 @@ package com.malise.jobApp.job;
 
 import java.util.List;
 
-import com.malise.jobApp.job.dto.JobWithCompanyDTO;
+import com.malise.jobApp.job.dto.JobDTO;
 
 public interface JobService {
 
-    List<JobWithCompanyDTO> findAll();
+    List<JobDTO> findAll();
 
     void createJob(Job job);
 
-    JobWithCompanyDTO findJobById(Long id);
+    JobDTO findJobById(Long id);
 
     Boolean deleteJobById(Long id);
 

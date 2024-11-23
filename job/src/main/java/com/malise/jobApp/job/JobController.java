@@ -2,11 +2,6 @@ package com.malise.jobApp.job;
 
 import java.util.List;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,8 +10,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import com.malise.jobApp.job.dto.JobWithCompanyDTO;
+import com.malise.jobApp.job.dto.JobDTO;
 import com.malise.jobApp.job.impl.JobImp;
 
 
@@ -31,17 +28,17 @@ public class JobController {
     }
 
     @GetMapping("/jobs")
-    public ResponseEntity<List<JobWithCompanyDTO>> findAllJobs() {
+    public ResponseEntity<List<JobDTO>> findAllJobs() {
 
-        List<JobWithCompanyDTO> jobs = jObServiceImp.findAll();
+        List<JobDTO> jobs = jObServiceImp.findAll();
  
         return ResponseEntity.status(HttpStatus.OK).body(jobs);
 
     }
 
     @GetMapping("/job/{id}")
-    public ResponseEntity<JobWithCompanyDTO> getJobById(@PathVariable Long id) {
-        JobWithCompanyDTO jobWithCompanyDTO= jObServiceImp.findJobById(id);
+    public ResponseEntity<JobDTO> getJobById(@PathVariable Long id) {
+        JobDTO jobWithCompanyDTO= jObServiceImp.findJobById(id);
 
         if (jobWithCompanyDTO != null) {
             // return ResponseEntity.status(HttpStatus.OK).body(job);
